@@ -1,0 +1,186 @@
+Project Kliksy {
+  database_type: 'MySQL'
+  Note: 'Base de datos de Plataforma Kliksy'
+}
+
+Table roles {
+  id int [pk, increment]
+  nombre varchar(255) [not null]
+  created_at datetime
+  updated_at datetime
+}
+
+Table users {
+  id int [pk, increment]
+  name varchar(255) [not null]
+  email varchar(255) [unique, not null]
+  email_verified_at datetime
+  password varchar(255) [not null]
+  remember_token varchar(100)
+  role_id int [not null]
+  telefono varchar(255)
+  direccion varchar(255)
+  onboarding_completado boolean [default: false]
+  google_id varchar(255)
+  activo boolean [default: true]
+  created_at datetime
+  updated_at datetime
+}
+Ref: users.role_id > roles.id
+
+Table servicios {
+  id int [pk, increment]
+  user_id int [not null]
+  titulo varchar(255) [not null]
+  descripcion text [not null]
+  precio decimal(8,2) [not null]
+  categoria varchar(255) [not null]
+  subcategoria varchar(255)
+  duracion int
+  foto varchar(255)
+  fotos json
+  created_at datetime
+  updated_at datetime
+}
+Ref: servicios.user_id > users.id
+
+Table solicituds {
+  id int [pk, increment]
+  servicio_id int [not null]
+  cliente_id int [not null]
+  fecha datetime [not null]
+  estado varchar(255)
+  created_at datetime
+  updated_at datetime
+}
+Ref: solicituds.servicio_id > servicios.id
+Ref: solicituds.cliente_id > users.id
+
+Table resenas {
+  id int [pk, increment]
+  servicio_id int [not null]
+  cliente_id int [not null]
+  profesional_id int [not null]
+  calificacion int [not null]
+  comentario text [not null]
+  created_at datetime
+  updated_at datetime
+}
+Ref: resenas.servicio_id > servicios.id
+Ref: resenas.cliente_id > users.id
+Ref: resenas.profesional_id > users.id
+
+Table perfiles_profesionales {
+  id int [pk, increment]
+  user_id int [not null]
+  descripcion text
+  experiencia varchar(255)
+  ubicacion varchar(255)
+  whatsapp varchar(255)
+  categorias json
+  en_vacaciones boolean [default: false]
+  cedula varchar(255)
+  horario json
+  duracion_promedio int
+  created_at datetime
+  updated_at datetime
+}
+Ref: perfiles_profesionales.user_id - users.id
+
+Table fotos_perfil {
+  id int [pk, increment]
+  perfil_profesional_id int [not null]
+  ruta varchar(255) [not null]
+  created_at datetime
+  updated_at datetime
+}
+Ref: fotos_perfil.perfil_profesional_id > perfiles_profesionales.id
+
+Table negocios {
+  id int [pk, increment]
+  perfil_profesional_id int [not null]
+  nombre varchar(255) [not null]
+  descripcion text
+  direccion varchar(255)
+  telefono varchar(255)
+  categoria varchar(255)
+  created_at datetime
+  updated_at datetime
+}
+Ref: negocios.perfil_profesional_id > perfiles_profesionales.id
+
+Table respuestas_resena {
+  id int [pk, increment]
+  resena_id int [not null]
+  user_id int [not null]
+  contenido text [not null]
+  created_at datetime
+  updated_at datetime
+}
+Ref: respuestas_resena.resena_id - resenas.id
+Ref: respuestas_resena.user_id > users.id
+
+Table reportes {
+  id int [pk, increment]
+  resena_id int [not null]
+  user_id int [not null]
+  motivo varchar(255) [not null]
+  estado varchar [default: 'pendiente']
+  created_at datetime
+  updated_at datetime
+}
+Ref: reportes.resena_id > resenas.id
+Ref: reportes.user_id > users.id
+
+Table reservas {
+  id int [pk, increment]
+  cliente_id int [not null]
+  profesional_id int [not null]
+  servicio_id int [not null]
+  fecha date [not null]
+  hora_inicio time [not null]
+  hora_fin time [not null]
+  estado varchar [default: 'pendiente']
+  nota_cliente varchar(255)
+  estado_pago varchar [default: 'pendiente']
+  monto decimal(8,2)
+  liberacion_automatica_at datetime
+  liberado_at datetime
+  confirmacion_cliente boolean [default: false]
+  created_at datetime
+  updated_at datetime
+}
+Ref: reservas.cliente_id > users.id
+Ref: reservas.profesional_id > users.id
+Ref: reservas.servicio_id > servicios.id
+
+Table reportes_servicios {
+  id int [pk, increment]
+  servicio_id int
+  profesional_id int
+  user_id int [not null]
+  motivo varchar(255) [not null]
+  tipo varchar [default: 'servicio']
+  estado varchar [default: 'pendiente']
+  created_at datetime
+  updated_at datetime
+}
+Ref: reportes_servicios.servicio_id > servicios.id
+Ref: reportes_servicios.profesional_id > users.id
+Ref: reportes_servicios.user_id > users.id
+
+Table disputas_reserva {
+  id int [pk, increment]
+  reserva_id int [not null]
+  cliente_id int [not null]
+  profesional_id int [not null]
+  motivo text [not null]
+  estado varchar [default: 'pendiente']
+  resolucion_admin text
+  resuelto_at datetime
+  created_at datetime
+  updated_at datetime
+}
+Ref: disputas_reserva.reserva_id > reservas.id
+Ref: disputas_reserva.cliente_id > users.id
+Ref: disputas_reserva.profesional_id > users.id
