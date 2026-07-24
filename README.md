@@ -1,59 +1,141 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Kliksy — Servicios a domicilio en Florencia, Caquetá
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Kliksy es una plataforma web desarrollada en **Laravel** diseñada para conectar a profesionales de diversos sectores (barbería, plomería, electricidad, belleza, etc.) con clientes locales en Florencia, Caquetá. Permite a los usuarios buscar servicios, reservar citas de forma interactiva y gestionar perfiles, agendas e historiales financieros.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🛠️ Tecnologías y Requisitos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend**: PHP >= 8.2 & Laravel 11
+- **Base de Datos**: MySQL / MariaDB (Recomendado Laragon en Windows)
+- **Frontend**: Tailwind CSS (v4) & Alpine.js, compilado con Vite
+- **Integraciones**:
+  - **Google OAuth**: Para autenticación rápida de usuarios.
+  - **Anthropic Claude API**: Para el análisis automático y resumen inteligente de reseñas de los profesionales.
+  - **Resend**: Para envío y verificación de correos electrónicos.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🚀 Instalación y Despliegue Local
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Sigue estos pasos para poner en marcha el proyecto en tu entorno local (utilizando Laragon en Windows):
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Clonar el repositorio
+Mueve el proyecto dentro del directorio raíz de tu servidor (por ejemplo, `C:\laragon\www\kliksy`).
 
-## Laravel Sponsors
+### 2. Instalar dependencias
+Abre una terminal en la carpeta del proyecto y ejecuta:
+```bash
+composer install
+npm install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Configurar variables de entorno
+Copia el archivo de ejemplo para crear tu configuración local:
+```bash
+copy .env.example .env
+```
+Abre el archivo `.env` recién creado y configura tus accesos a la base de datos y llaves de servicios:
+- `DB_DATABASE=kliksy`
+- `DB_USERNAME=root`
+- `DB_PASSWORD=` *(o la contraseña de tu base de datos local)*
 
-### Premium Partners
+Genera la clave única de la aplicación:
+```bash
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 4. Migraciones y Seeders
+Crea las tablas y los datos de prueba iniciales ejecutando:
+```bash
+php artisan migrate --seed
+```
 
-## Contributing
+### 5. Compilar assets y arrancar servidores
+Tienes dos formas de ejecutar el frontend:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Para desarrollo (recomendado)**: Ejecuta el servidor de Vite en tiempo real para reflejar cambios inmediatamente.
+  ```bash
+  npm run dev
+  ```
+  *Nota: Si estás usando un túnel de desarrollo (como VS Code Port Forwarding o Dev Tunnels), asegúrate de que tu puerto 5173 esté accesible o compila en producción.*
 
-## Code of Conduct
+- **Para producción/pruebas sin servidor de assets**: Compila los archivos una única vez:
+  ```bash
+  npm run build
+  ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Luego, en Laragon haz clic en **"Start All"** y accede a la web mediante `http://kliksy.test` o ejecuta:
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🔒 Variables de Entorno y Buenas Prácticas de Seguridad
 
-## License
+### Configuración en Producción
+Para desplegar Kliksy en un servidor de producción de forma segura, es obligatorio realizar los siguientes ajustes en el archivo `.env`:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Desactivar el modo depuración**: 
+   ```env
+   APP_DEBUG=false
+   APP_ENV=production
+   ```
+   *Nunca expongas errores detallados en producción, ya que pueden revelar información interna del servidor y rutas del sistema.*
+
+2. **Credenciales robustas**:
+   Modifica el usuario y contraseña por defecto de la base de datos. Evita el uso de `root` sin contraseña en producción.
+
+3. **Cifrado de Variables y Claves**:
+   Todas las llaves privadas para servicios externos (**Google Client Secret**, **Anthropic API Key**, **Resend API Key**) deben definirse **exclusivamente en el archivo `.env`** del servidor. Bajo ninguna circunstancia deben escribirse directamente ("quemarse") en el código fuente.
+
+4. **Anonimización de datos (IA)**:
+   Al enviar datos a APIs externas (como el análisis de reseñas a Anthropic Claude), la plataforma está diseñada para omitir nombres reales y datos de identificación personal de los clientes, enviando únicamente el comentario genérico para proteger la privacidad de los usuarios.
+
+---
+
+## 💻 Comandos Útiles
+
+- **Crear base de datos limpia**: `php artisan migrate:fresh --seed`
+- **Limpiar caché general**: `php artisan optimize:clear`
+- **Ver las rutas registradas**: `php artisan route:list`
+- **Correr tareas en segundo plano (colas)**: `php artisan queue:work`
+
+---
+
+## 🔌 Documentación de la API y Endpoints Clave
+
+Aunque Kliksy no cuenta con un archivo API dedicado independiente (utiliza el enrutamiento integrado de Laravel), posee múltiples endpoints dinámicos de consulta interactiva:
+
+### 1. Análisis inteligente de reseñas
+* **Ruta**: `/profesional/analisis-resenas` (GET)
+* **Middleware**: `auth`
+* **Descripción**: Obtiene las últimas 20 reseñas del profesional autenticado, las anonimiza y las envía a la API de Anthropic Claude para generar un resumen directo y sugerencias en un formato de máximo 3 frases.
+* **Respuesta exitosa (JSON)**:
+  ```json
+  {
+    "resumen": "Los clientes destacan la puntualidad y amabilidad del servicio. Se sugiere mejorar la comunicación previa a la cita."
+  }
+  ```
+
+### 2. Obtener ranuras (slots) horarios disponibles
+* **Ruta**: `/reservar/{profesionalId}/slots` (GET)
+* **Descripción**: Retorna las horas disponibles de un profesional para una fecha específica recibida en la consulta `?fecha=YYYY-MM-DD`.
+* **Parámetros de consulta**: `fecha` (ej. `2026-06-12`).
+* **Respuesta exitosa (JSON)**:
+  ```json
+  [
+    "08:00",
+    "09:00",
+    "10:00",
+    "14:00",
+    "15:00"
+  ]
+  ```
+
+### 3. Registro de Reservas
+* **Ruta**: `/reservas` (POST)
+* **Middleware**: `auth`
+* **Descripción**: Crea una nueva solicitud de reserva.
+* **Parámetros**: `profesional_id`, `servicio_id`, `fecha`, `hora`.

@@ -209,7 +209,7 @@ Route::get('/profesional/analisis-resenas', function () {
         return response()->json(['resumen' => null, 'mensaje' => 'Necesitas al menos 2 reseñas para generar el análisis.']);
     }
 
-    $texto = $resenas->map(fn ($r) => "Cliente: {$r->cliente->name} | Calificación: {$r->calificacion}/5 | Comentario: {$r->comentario}"
+    $texto = $resenas->map(fn ($r) => "Cliente | Calificación: {$r->calificacion}/5 | Comentario: {$r->comentario}"
     )->join("\n");
 
     $response = \Illuminate\Support\Facades\Http::withHeaders([

@@ -11,7 +11,7 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
-    host: '0.0.0.0',
+    host: 'localhost',
     port: 5173,
     strictPort: true,
     hmr: false,  // ← deshabilita HMR completamente
